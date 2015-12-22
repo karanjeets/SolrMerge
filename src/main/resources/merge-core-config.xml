@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<properties>
+	<!-- Initial Configuration -->
+	<init>
+		<base-index>http://localhost:8983/solr/base_index</base-index>	<!-- Required -->
+		<merge-index>http://localhost:8983/solr/team36</merge-index>	<!-- Required -->
+		<query>*:*</query>		<!-- Optional; Default is *:*	-->
+		<start>0</start>		<!-- Optional; Default is 0 	-->
+		<rows>10</rows>			<!-- Optional; Default is 10 	-->
+		<buffer>100</buffer>	<!-- Optional; Default is 100 	-->
+	</init>
+	
+	<!-- Field Mapping. Please make sure you have correctly configured your Solr schema before merging core -->
+	<mapping>
+		<!-- One-to-One Field Mapping -->
+		<field merge="id" base="id" />
+		<field merge="content" base="content" />
+		<field merge="title" base="title" />
+		
+		<!-- Defining Handler for fields; params is optional -->
+		<field merge="contentType" base="contentType" class="gov.nasa.jpl.memex.solr.handler.ExampleHandler" handler="extractContentType" params="id" />
+		<field merge="image_links" base="image_links" class="gov.nasa.jpl.memex.solr.handler.ExampleHandler" handler="extractImageLinks" params="id,host" />
+		
+		<!-- Defining Dynamic Fields -->
+		<dynamicField merge=".*_ts_md" />
+		<dynamicField merge=".*_t_md" />
+		
+		<!-- Defining Required Fields; This should be present in each document. If not, a handler should be written for the same -->
+		<required merge="contentType" />
+		<required merge="image_links" />
+	</mapping>
+</properties>
